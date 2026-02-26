@@ -10,8 +10,8 @@ This folder consolidates the current implementation, experiment summary, and rep
 
 ## Final decision snapshot
 
-- Smoke stage passed for metric availability.
-- Coarse stage failed threshold (`avg_delta_best_fg = 0.000819 < 0.008`).
-- Confirm stage skipped by hard-stop rule.
+- Latest cycle uses `Stage0 Learnability Gate` first.
+- Stage0 failed (`best_maskacc_fg = 0.0000 < 0.0200`), so smoke/coarse/confirm were skipped.
+- FG diagnostics show `zero_fg_batches=0`, so failure is not caused by empty foreground batches.
 
 See `CURRENT_STATUS.md` for full details.

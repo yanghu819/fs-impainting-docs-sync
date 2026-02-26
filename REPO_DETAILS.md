@@ -37,19 +37,31 @@ Key changes:
 - Added `fg_only` and `fg_token_threshold`.
 - Foreground mask logic:
   - `eval_mask = mb & (yb > fg_token_threshold)`
+- Added `return_stats` path for diagnostics.
+- For `fg_only`, batches with `fg_masked_cnt==0` are skipped from FG average denominator.
 
 3. Extended training eval logging:
 - Prints and records:
   - `maskacc_{split}` (existing)
   - `maskacc_fg_{split}` (new when enabled)
+  - `maskacc_fg_stats_{split}` (new diagnostics)
 
 4. Extended non-train eval path:
 - Added `maskacc_fg_{split}` output when `MASKACC_FG_EVAL=1`.
+- Added `maskacc_fg_stats_{split}` output when `MASKACC_FG_EVAL=1`.
 
 5. Added run metadata fields:
 - `future_seed_alpha_init`
 - `maskacc_fg_eval`
 - `fg_token_threshold`
+
+6. Added JSONL eval diagnostic fields:
+- `fg_masked_cnt_{split}`
+- `masked_cnt_{split}`
+- `fg_cnt_{split}`
+- `zero_fg_batches_{split}`
+- `used_batches_{split}`
+- `total_batches_{split}`
 
 ## Utility scripts in this workspace
 

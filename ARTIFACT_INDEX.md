@@ -1,44 +1,46 @@
 # Artifact Index
 
-## Stage artifacts
+## Latest cycle (Cycle-2, Stage0-first)
 
-## Smoke (`results/mnist_fg_smoke/`)
+Run tag:
+- `v2_20260226T124341Z`
+
+## Stage0 (`results/mnist_fg_stage0_v2_20260226T124341Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
 - `prune_table.csv`
 - `gate.json`
-- `fs0_seed20260226.log` / `.jsonl`
-- `fs1a-2_seed20260226.log` / `.jsonl`
+- `fs0_seed20260226.log`
+- `fs0_seed20260226.jsonl`
 - `run_manifest_fs0_seed20260226.txt`
-- `run_manifest_fs1a-2_seed20260226.txt`
-- `regression_check.log`
-- `regression_check.jsonl`
 
-## Coarse (`results/mnist_fg_coarse/`)
-
-- `summary_rows.csv`
-- `summary_agg.json`
-- `prune_table.csv`
-- `gate.json`
-- `fs0_seed20260226_r1.log` / `.jsonl`
-- `fs1a-2_seed20260226_r1.log` / `.jsonl`
-- `fs1a-1_seed20260226_r2.log` / `.jsonl`
-- `run_manifest_fs0_seed20260226_r1.txt`
-- `run_manifest_fs1a-2_seed20260226_r1.txt`
-- `run_manifest_fs1a-1_seed20260226_r2.txt`
-
-## Confirm (`results/mnist_fg_confirm/`)
+## Smoke skipped (`results/mnist_fg_smoke_v2_20260226T124341Z/`)
 
 - `SKIPPED.txt`
 
-## Cross-stage summary files
+## Coarse skipped (`results/mnist_fg_coarse_v2_20260226T124341Z/`)
 
+- `SKIPPED.txt`
+
+## Confirm skipped (`results/mnist_fg_confirm_v2_20260226T124341Z/`)
+
+- `SKIPPED.txt`
+
+## Reports (latest)
+
+- `results/mnist_fg_stage0_hard_stop_report.md`
 - `results/decision_report.txt`
-- `results/mnist_fg_hard_stop_report.md`
 - `results/fg_metric_logic_check.txt`
 
-## Data/manifests (upload side)
+## Historical cycle (Cycle-1, no Stage0 gate)
+
+- `results/mnist_fg_smoke/`
+- `results/mnist_fg_coarse/`
+- `results/mnist_fg_confirm/`
+- `results/mnist_fg_hard_stop_report.md`
+
+## Upload/data manifests
 
 - `artifacts/manifests/run_manifest_data_*.txt`
 - `artifacts/manifests/sha256_data_*.txt`
