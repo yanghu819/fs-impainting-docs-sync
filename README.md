@@ -1,17 +1,20 @@
 # FS Impainting Dossier
 
-This folder consolidates the current implementation, experiment summary, and repository details for the Future-Seed image inpainting validation work.
+This repo is the experiment dossier / decision sync for validating Future-Seed on image inpainting.
 
 ## Included documents
 
-- `CURRENT_STATUS.md`: end-to-end status and gate outcomes.
-- `REPO_DETAILS.md`: repository structure, key files, and code changes.
-- `ARTIFACT_INDEX.md`: where all logs, manifests, and result tables are.
+- `CURRENT_STATUS.md`: current staged outcome and decision.
+- `REPO_DETAILS.md`: upstream code location and local patch points.
+- `ARTIFACT_INDEX.md`: where each stage artifact is stored.
+- `REPO_TREE.txt`: tracked file tree snapshot.
 
-## Final decision snapshot
+## Latest snapshot (v3_20260226T134028Z)
 
-- Latest cycle uses `Stage0 Learnability Gate` first.
-- Stage0 failed (`best_maskacc_fg = 0.0000 < 0.0200`), so smoke/coarse/confirm were skipped.
-- FG diagnostics show `zero_fg_batches=0`, so failure is not caused by empty foreground batches.
+- Stage0 (`FS0`) passed learnability gate: `best_maskacc_fg_val=0.940173`.
+- smoke passed (metrics complete, `FS0` vs `FS1(alpha=-2)` both stable).
+- coarse failed threshold (`>=0.008`): best FG delta stayed `0.000000`.
+- one tangent round (`alpha -2 -> -1`) still no FG gain.
+- confirm skipped by protocol (`coarse_gate_failed`).
 
-See `CURRENT_STATUS.md` for full details.
+See `CURRENT_STATUS.md` for full numbers and links.

@@ -2,60 +2,50 @@
 
 ## Source snapshot
 
-- Downloaded source snapshot:
-  - `payload/src/future-seed-main.tar.gz`
-- Extracted workspace repo root:
-  - `payload/src/future-seed-main/`
-- Core experiment script:
-  - `payload/src/future-seed-main/rwkv-diff-future-seed/rwkv_diff_future_seed.py`
+- Source snapshot: `payload/src/future-seed-main.tar.gz`
+- Extracted root: `payload/src/future-seed-main/`
+- Core script: `payload/src/future-seed-main/rwkv-diff-future-seed/rwkv_diff_future_seed.py`
 
-## Repository layout (relevant parts)
+## Relevant upstream layout
 
-Top level:
-- `README.md`, `RESULTS.md`: project explanation and reported benchmark outcomes.
-- `run.sh`, `run_qa.sh`: baseline task reproductions.
-- `rwkv-diff-future-seed/`: main training/eval implementation.
-- `tools/`: helper scripts (dataset bin build, summary helpers).
-- `paper/`: PDF reports and latex sources.
+Top-level:
+- `README.md`, `RESULTS.md`
+- `run.sh`, `run_qa.sh`
+- `rwkv-diff-future-seed/`
+- `tools/`
+- `paper/`
 
 Inside `rwkv-diff-future-seed/`:
-- `rwkv_diff_future_seed.py`: all task switches, data loading, model, train/eval loops.
-- `run_sudoku.sh`, `run_kvsort_*.sh`, `run_permfill_*.sh`: task-specific launch scripts.
-- `logs/*.log`: existing sample logs from the upstream repo.
+- `rwkv_diff_future_seed.py` (data/mask/model/train/eval all-in-one)
+- `run_*.sh` task launchers
+- `logs/*.log` sample logs
 
-## Local code changes made
+## Local patch points
 
-File changed:
+Changed file:
 - `payload/src/future-seed-main/rwkv-diff-future-seed/rwkv_diff_future_seed.py`
 
-Key changes:
-1. Added new env switches:
-- `MASKACC_FG_EVAL`
-- `FG_TOKEN_THRESHOLD`
+### 1) FG metric switch & compatibility
 
-2. Extended `maskacc_eval`:
-- Added `fg_only` and `fg_token_threshold`.
-- Foreground mask logic:
+- Added env:
+  - `MASKACC_FG_EVAL` (default `0`)
+  - `FG_TOKEN_THRESHOLD` (default `0`)
+- Keeps original `maskacc_val` path unchanged when FG eval is off.
+
+### 2) `maskacc_eval` FG-only path + de-bias
+
+- Added `fg_only` + `fg_token_threshold` route:
   - `eval_mask = mb & (yb > fg_token_threshold)`
-- Added `return_stats` path for diagnostics.
-- For `fg_only`, batches with `fg_masked_cnt==0` are skipped from FG average denominator.
+- Added `return_stats` option.
+- For FG-only eval, batches with `fg_masked_cnt==0` are excluded from FG average denominator.
 
-3. Extended training eval logging:
-- Prints and records:
-  - `maskacc_{split}` (existing)
-  - `maskacc_fg_{split}` (new when enabled)
-  - `maskacc_fg_stats_{split}` (new diagnostics)
+### 3) Structured diagnostics to log / jsonl
 
-4. Extended non-train eval path:
-- Added `maskacc_fg_{split}` output when `MASKACC_FG_EVAL=1`.
-- Added `maskacc_fg_stats_{split}` output when `MASKACC_FG_EVAL=1`.
+Added printed stats:
+- `maskacc_fg_stats_{split} fg_masked_cnt=... masked_cnt=... fg_cnt=... zero_fg_batches=... used_batches=... total_batches=...`
 
-5. Added run metadata fields:
-- `future_seed_alpha_init`
-- `maskacc_fg_eval`
-- `fg_token_threshold`
-
-6. Added JSONL eval diagnostic fields:
+Added JSONL fields:
+- `maskacc_fg_{split}`
 - `fg_masked_cnt_{split}`
 - `masked_cnt_{split}`
 - `fg_cnt_{split}`
@@ -63,16 +53,33 @@ Key changes:
 - `used_batches_{split}`
 - `total_batches_{split}`
 
-## Utility scripts in this workspace
+### 4) Square mask support for image-style hole
+
+Added env + data path support in `DATA_BIN` sampling:
+- `BIN_MASK_MODE=square`
+- `BIN_SQUARE_SIZE` (default `0`, fallback to centered half-side heuristic)
+- `BIN_SQUARE_TOP`, `BIN_SQUARE_LEFT` (optional explicit position)
+
+Behavior:
+- Requires square `SEQ_LEN` (e.g. 14x14 => 196).
+- Builds a 2D square hole, then maps back to 1D token indices.
+
+### 5) run_meta extensions
+
+Added metadata fields:
+- `future_seed_alpha_init`
+- `maskacc_fg_eval`
+- `fg_token_threshold`
+- `bin_square_size`
+- `bin_square_top`
+- `bin_square_left`
+
+## Workspace utility scripts
 
 - `scripts/autodl_push_data.sh`
-  - local data push to remote with manifest + sha.
 - `scripts/autodl_build_and_push_whl.sh`
-  - local wheel download/build + upload.
 - `scripts/autodl_remote_install_whl.sh`
-  - remote offline wheel install.
 
-## Experiment document in this workspace
+## Experiment protocol doc
 
 - `EXPERIMENT_MINIMAL.md`
-  - contract, stage gate rules, and report template.

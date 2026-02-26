@@ -2,75 +2,67 @@
 
 ## 目标
 
-验证 `FUTURE_SEED=1` 是否能在 image inpainting 上稳定提升前景恢复能力。
+验证 `FUTURE_SEED=1` 是否在 image inpainting 设置下稳定提升前景恢复。
 
-- 主指标：`maskacc_fg_val`
-- coarse 门槛：`+0.8pp` (`0.008`)
-- confirm 门槛：3 个 seed 平均 `+1.5pp`
+- 主指标: `maskacc_fg_val`
+- coarse 门槛: `+0.8pp` (`0.008`)
+- confirm 门槛: 三个 seed 平均 `+1.5pp` 且单 seed 不为负
 
-## 最新状态（Cycle-2，当前主结论）
+## 最新结论 (Cycle-3 / run_tag=v3_20260226T134028Z)
 
-本轮新增 `Stage0 Learnability Gate` 与 FG 诊断后，结果如下：
+本轮先通过 Stage0 学习性，再走 `smoke -> coarse -> confirm`：
 
-1. Stage0（FS0 单跑，门槛 `best_maskacc_fg_val >= 0.02`）失败。
-2. 因 Stage0 失败，`smoke/coarse/confirm` 按协议全部跳过。
-3. FG 诊断显示 `zero_fg_batches=0`，说明不是“前景样本为空”导致指标为 0。
+1. Stage0: **PASS**
+- gate: `best_maskacc_fg >= 0.02`
+- result: `best_maskacc_fg=0.940173`
 
-关键数值：
-- `best_maskacc_fg_val = 0.0000`
-- Stage0 gate: fail (`0.0000 < 0.0200`)
+2. smoke: **PASS**
+- `FS0` 与 `FS1(alpha=-2)` 都产出完整指标 (`maskacc_val` / `maskacc_fg_val` / FG stats)
+- `avg_delta_best_fg=0.0`
 
-证据：
-- `results/mnist_fg_stage0_v2_20260226T124341Z/gate.json`
-- `results/mnist_fg_stage0_v2_20260226T124341Z/prune_table.csv`
-- `results/mnist_fg_stage0_v2_20260226T124341Z/summary_agg.json`
-- `results/mnist_fg_stage0_v2_20260226T124341Z/fs0_seed20260226.log`
+3. coarse: **FAIL (剪枝)**
+- baseline (`FS0`) best FG: `0.940173`
+- candidate (`FS1, alpha=-2`) best FG: `0.940173`, `delta=0.000000`
+- tangent round (`alpha=-1`) best FG: `0.940173`, `delta=0.000000`
+- gate: `avg_delta_best_fg=0.0 < 0.008`
 
-## 之前历史（Cycle-1，保留）
+4. confirm: **SKIPPED**
+- reason: `coarse_gate_failed`
 
-历史轮次曾执行 `smoke -> coarse`（无 Stage0）：
+## 固定设置与最小改动说明
 
-- smoke：通过指标链路
-- coarse：失败（`avg_delta_best_fg = 0.000819 < 0.008`）
-- confirm：跳过
+本轮主线为“提升可学习性后再评 FS 增益”，关键冻结项：
 
-历史证据：
-- `results/mnist_fg_smoke/`
-- `results/mnist_fg_coarse/`
-- `results/mnist_fg_confirm/`
+- 数据: `mnist14b` (binary foreground)
+- `SEQ_LEN=196`
+- `BIN_MASK_MODE=square`, `BIN_SQUARE_SIZE=6`
+- 单卡 `RTX 5090`
+- 只改小变量: `FUTURE_SEED`, `FUTURE_SEED_ALPHA_INIT`
 
-## 本轮新增实现
+## 解读
 
-在 `rwkv_diff_future_seed.py` 上新增：
+- Stage0 已通过，说明任务可学习。
+- 但在当前 binary + square 设定下，`FS1` 相对 `FS0` 未给出可测的 FG 增益（coarse 与切线都为 0）。
+- 因 coarse 未达门槛，按协议不进入 confirm，多 seed 对比不再继续烧卡。
 
-1. FG 统计诊断输出：
-- `fg_masked_cnt`
-- `masked_cnt`
-- `fg_cnt`
-- `zero_fg_batches`
-- `used_batches`
-- `total_batches`
-
-2. FG 评估去偏：
-- 对 `fg_only` 路径，当 batch 内 `fg_masked_cnt==0` 时，不计入 FG 平均分母。
-
-3. JSONL 新字段（eval event）：
-- `fg_masked_cnt_{split}`
-- `masked_cnt_{split}`
-- `fg_cnt_{split}`
-- `zero_fg_batches_{split}`
-- `used_batches_{split}`
-- `total_batches_{split}`
-
-## 决策结论
+## 决策型汇报
 
 `当前配置数｜通过数｜最佳配置｜风险｜下一步`
 
-`1(Stage0)｜0｜FS0(stage0) best_maskacc_fg=0.0000｜fg样本存在但前景恢复完全未学到(zero_fg_batches=0)｜先改任务可学习性(mask设计/量化)后再重开FS对比`
+`6｜2(stage0+smoke)｜FS0/FS1 best_maskacc_fg 持平(0.940173)｜任务已可学但FS增益不可辨识，可能进入“饱和区”｜切到更具未来依赖的mask/任务，再重开coarse`
 
-## 相关报告
+## 证据路径 (latest)
 
-- `results/mnist_fg_stage0_hard_stop_report.md`
-- `results/mnist_fg_hard_stop_report.md` (Cycle-1)
-- `results/decision_report.txt`
-- `results/fg_metric_logic_check.txt`
+- `results/mnist_fg_stage0_v3_20260226T134028Z/gate.json`
+- `results/mnist_fg_stage0_v3_20260226T134028Z/summary_agg.json`
+- `results/mnist_fg_smoke_v3_20260226T134028Z/gate.json`
+- `results/mnist_fg_smoke_v3_20260226T134028Z/summary_agg.json`
+- `results/mnist_fg_coarse_v3_20260226T134028Z/gate.json`
+- `results/mnist_fg_coarse_v3_20260226T134028Z/prune_table.csv`
+- `results/mnist_fg_coarse_v3_20260226T134028Z/summary_agg.json`
+- `results/mnist_fg_confirm_v3_20260226T134028Z/SKIPPED.txt`
+
+## 历史轮次
+
+- Cycle-2 (`v2_20260226T124341Z`): Stage0 fail，后续全跳过。
+- Cycle-1 (no Stage0 gate): smoke 过、coarse 不达门槛、confirm 跳过。
