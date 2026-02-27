@@ -30,7 +30,7 @@ Changed file:
 - Added env:
   - `MASKACC_FG_EVAL` (default `0`)
   - `FG_TOKEN_THRESHOLD` (default `0`)
-- Keeps original `maskacc_val` path unchanged when FG eval is off.
+- Keeps original `maskacc_val` unchanged when FG eval is off.
 
 ### 2) `maskacc_eval` FG-only path + de-bias
 
@@ -41,10 +41,10 @@ Changed file:
 
 ### 3) Structured diagnostics to log / jsonl
 
-Added printed stats:
+Printed stats:
 - `maskacc_fg_stats_{split} fg_masked_cnt=... masked_cnt=... fg_cnt=... zero_fg_batches=... used_batches=... total_batches=...`
 
-Added JSONL fields:
+JSONL fields:
 - `maskacc_fg_{split}`
 - `fg_masked_cnt_{split}`
 - `masked_cnt_{split}`
@@ -55,21 +55,20 @@ Added JSONL fields:
 
 ### 4) Square mask support
 
-Added env + data path support:
+Added env support:
 - `BIN_MASK_MODE=square`
 - `BIN_SQUARE_SIZE`
 - `BIN_SQUARE_TOP`, `BIN_SQUARE_LEFT`
 
-## Local patch points (experiment side, no new training code)
+## Experiment-side setup evolution
 
-From Cycle-4 to Cycle-5, we changed experiment setup only:
+- Cycle-4: row-major + prefix(0.5) -> Stage0 fail.
+- Cycle-5: `mnist14b_colmajor_bin` + prefix(0.5) -> confirm pass.
+- Cycle-6 (positive control): `mnist14b_left_eq_right_colmajor_bin` + prefix(0.5) -> confirm pass.
 
-- `BIN_MASK_MODE: square -> prefix`
-- added `col-major` token order dataset:
-  - `payload/data/mnist14b_colmajor_bin/mnist14b_train.bin`
-  - `payload/data/mnist14b_colmajor_bin/mnist14b_val.bin`
-- corrected logging env in run scripts:
-  - `LOG_JSONL` (not `LOG_JSONL_PATH`)
+Datasets added in workspace:
+- `payload/data/mnist14b_colmajor_bin/*`
+- `payload/data/mnist14b_left_eq_right_colmajor_bin/*`
 
 ## Workspace utility scripts
 
