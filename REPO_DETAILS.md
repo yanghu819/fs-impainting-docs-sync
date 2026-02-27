@@ -66,6 +66,7 @@ Added env support:
 - Cycle-5: `mnist14b_colmajor_bin` + prefix(0.5) -> confirm pass.
 - Cycle-6: `mnist14b_left_eq_right_colmajor_bin` + prefix(0.5) (positive control) -> confirm pass.
 - Cycle-7: `mnist14b_colmajor_bin` + random mask -> confirm pass (smaller gains).
+- Cycle-8: `mnist14b_colmajor_bin` + square migration (`prefix->square`, init from prefix checkpoints) -> confirm pass (mean delta `+0.018732`).
 
 ## Workspace utility scripts
 

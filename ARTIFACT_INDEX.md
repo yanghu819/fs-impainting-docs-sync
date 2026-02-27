@@ -1,11 +1,11 @@
 # Artifact Index
 
-## Latest cycle (Cycle-7)
+## Latest cycle (Cycle-8)
 
 Run tag:
-- `v7_20260227T123631Z`
+- `v8_20260227T140325Z`
 
-## Stage0 (`results/mnist_fg_stage0_v7_20260227T123631Z/`)
+## Stage0 (`results/mnist_fg_stage0_v8_20260227T140325Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -13,7 +13,7 @@ Run tag:
 - `gate.json`
 - `fs0_seed20260226.log/jsonl`
 
-## Smoke (`results/mnist_fg_smoke_v7_20260227T123631Z/`)
+## Smoke (`results/mnist_fg_smoke_v8_20260227T140325Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -22,7 +22,7 @@ Run tag:
 - `fs0_seed20260226.log/jsonl`
 - `fs1a-2_seed20260226.log/jsonl`
 
-## Coarse (`results/mnist_fg_coarse_v7_20260227T123631Z/`)
+## Coarse (`results/mnist_fg_coarse_v8_20260227T140325Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -31,7 +31,7 @@ Run tag:
 - `fs0_seed20260226_r1.log/jsonl`
 - `fs1a-2_seed20260226_r1.log/jsonl`
 
-## Confirm (`results/mnist_fg_confirm_v7_20260227T123631Z/`)
+## Confirm (`results/mnist_fg_confirm_v8_20260227T140325Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -44,6 +44,7 @@ Run tag:
 
 ## Reports
 
+- `results/mnist_fg_success_report_v8_square_migration.md`
 - `results/mnist_fg_success_report_v7_random.md`
 - `results/mnist_fg_success_report_v6_left_right.md`
 - `results/mnist_fg_success_report_v5.md`
@@ -51,6 +52,7 @@ Run tag:
 
 ## Previous cycles
 
+- Cycle-7: `v7_20260227T123631Z` (random mask ablation, confirm pass)
 - Cycle-6: `v6_20260227T111807Z` (left=right positive-control, confirm pass)
 - Cycle-5: `v5_20260227T025027Z` (prefix natural task, confirm pass)
 - Cycle-4: `v4_20260227T023816Z` (row-major prefix fail)

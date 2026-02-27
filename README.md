@@ -9,14 +9,15 @@ This repo is the experiment dossier / decision sync for validating Future-Seed o
 - `ARTIFACT_INDEX.md`: artifact index by cycle/stage.
 - `REPO_TREE.txt`: tracked file tree snapshot.
 
-## Latest snapshot (v7_20260227T123631Z)
+## Latest snapshot (v8_20260227T140325Z)
 
-- task setting: `mnist14b_colmajor + BIN_MASK_MODE=random`
-- Stage0: pass (`best_maskacc_fg=0.6061`)
+- task setting: `mnist14b_colmajor + square migration (prefix->square)`
+- Stage0: pass (`best_maskacc_fg=0.9413`)
 - smoke: pass
-- coarse: pass (`delta_best_fg=+0.0582`, `alpha=-2`)
-- confirm: pass (3-seed mean `+0.02924`, all seeds non-negative)
+- coarse: pass (`delta_best_fg=+0.01873`, `alpha=-2`)
+- confirm: pass (3-seed mean `+0.01873`, all seeds non-negative)
 
 Reference cycles:
+- `v7_20260227T123631Z` random-mask ablation confirm pass, mean `+0.02924`.
 - `v6_20260227T111807Z` positive-control (`left=right + col-major + prefix`) confirm pass, mean `+0.0873`.
 - `v5_20260227T025027Z` natural prefix task confirm pass, mean `+0.2757`.
