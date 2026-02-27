@@ -17,6 +17,7 @@
 
 2. smoke: **PASS**
 - `FS0` / `FS1(alpha=-2)` 指标链路完整
+- `avg_delta_best_fg=0.0` (smoke 预算内未分化)
 
 3. coarse: **PASS**
 - `FS0 best_fg=0.606053`
