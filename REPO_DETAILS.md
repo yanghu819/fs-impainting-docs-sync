@@ -64,11 +64,8 @@ Added env support:
 
 - Cycle-4: row-major + prefix(0.5) -> Stage0 fail.
 - Cycle-5: `mnist14b_colmajor_bin` + prefix(0.5) -> confirm pass.
-- Cycle-6 (positive control): `mnist14b_left_eq_right_colmajor_bin` + prefix(0.5) -> confirm pass.
-
-Datasets added in workspace:
-- `payload/data/mnist14b_colmajor_bin/*`
-- `payload/data/mnist14b_left_eq_right_colmajor_bin/*`
+- Cycle-6: `mnist14b_left_eq_right_colmajor_bin` + prefix(0.5) (positive control) -> confirm pass.
+- Cycle-7: `mnist14b_colmajor_bin` + random mask -> confirm pass (smaller gains).
 
 ## Workspace utility scripts
 
