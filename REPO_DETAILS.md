@@ -20,7 +20,7 @@ Inside `rwkv-diff-future-seed/`:
 - `run_*.sh` task launchers
 - `logs/*.log` sample logs
 
-## Local patch points
+## Local patch points (code)
 
 Changed file:
 - `payload/src/future-seed-main/rwkv-diff-future-seed/rwkv_diff_future_seed.py`
@@ -53,26 +53,23 @@ Added JSONL fields:
 - `used_batches_{split}`
 - `total_batches_{split}`
 
-### 4) Square mask support for image-style hole
+### 4) Square mask support
 
-Added env + data path support in `DATA_BIN` sampling:
+Added env + data path support:
 - `BIN_MASK_MODE=square`
-- `BIN_SQUARE_SIZE` (default `0`, fallback to centered half-side heuristic)
-- `BIN_SQUARE_TOP`, `BIN_SQUARE_LEFT` (optional explicit position)
+- `BIN_SQUARE_SIZE`
+- `BIN_SQUARE_TOP`, `BIN_SQUARE_LEFT`
 
-Behavior:
-- Requires square `SEQ_LEN` (e.g. 14x14 => 196).
-- Builds a 2D square hole, then maps back to 1D token indices.
+## Local patch points (experiment side, no new training code)
 
-### 5) run_meta extensions
+From Cycle-4 to Cycle-5, we changed experiment setup only:
 
-Added metadata fields:
-- `future_seed_alpha_init`
-- `maskacc_fg_eval`
-- `fg_token_threshold`
-- `bin_square_size`
-- `bin_square_top`
-- `bin_square_left`
+- `BIN_MASK_MODE: square -> prefix`
+- added `col-major` token order dataset:
+  - `payload/data/mnist14b_colmajor_bin/mnist14b_train.bin`
+  - `payload/data/mnist14b_colmajor_bin/mnist14b_val.bin`
+- corrected logging env in run scripts:
+  - `LOG_JSONL` (not `LOG_JSONL_PATH`)
 
 ## Workspace utility scripts
 

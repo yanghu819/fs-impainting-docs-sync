@@ -4,17 +4,17 @@ This repo is the experiment dossier / decision sync for validating Future-Seed o
 
 ## Included documents
 
-- `CURRENT_STATUS.md`: current staged outcome and decision.
+- `CURRENT_STATUS.md`: staged outcome and final decision.
 - `REPO_DETAILS.md`: upstream code location and local patch points.
-- `ARTIFACT_INDEX.md`: where each stage artifact is stored.
+- `ARTIFACT_INDEX.md`: stage artifact index.
 - `REPO_TREE.txt`: tracked file tree snapshot.
 
-## Latest snapshot (v3_20260226T134028Z)
+## Latest snapshot (v5_20260227T025027Z)
 
-- Stage0 (`FS0`) passed learnability gate: `best_maskacc_fg_val=0.940173`.
-- smoke passed (metrics complete, `FS0` vs `FS1(alpha=-2)` both stable).
-- coarse failed threshold (`>=0.008`): best FG delta stayed `0.000000`.
-- one tangent round (`alpha -2 -> -1`) still no FG gain.
-- confirm skipped by protocol (`coarse_gate_failed`).
+- task setting: `mnist14b + col-major token order + prefix(0.5)`
+- Stage0: pass (`best_maskacc_fg=0.3901`)
+- smoke: pass
+- coarse: pass (`delta_best_fg=+0.2905`, `alpha=-2`)
+- confirm: pass (3-seed mean `+0.2757`, all seeds non-negative)
 
-See `CURRENT_STATUS.md` for full numbers and links.
+Previous cycle `v4_20260227T023816Z` (row-major prefix) failed at Stage0 (`best_maskacc_fg=0`).
