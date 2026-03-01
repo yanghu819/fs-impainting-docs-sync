@@ -1,11 +1,11 @@
 # Artifact Index
 
-## Latest cycle (Cycle-8)
+## Latest cycle (Cycle-9A)
 
 Run tag:
-- `v8_20260227T140325Z`
+- `v9a_20260301T015231Z`
 
-## Stage0 (`results/mnist_fg_stage0_v8_20260227T140325Z/`)
+## Stage0 (`results/mnist_fg_stage0_v9a_20260301T015231Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -13,7 +13,7 @@ Run tag:
 - `gate.json`
 - `fs0_seed20260226.log/jsonl`
 
-## Smoke (`results/mnist_fg_smoke_v8_20260227T140325Z/`)
+## Smoke (`results/mnist_fg_smoke_v9a_20260301T015231Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -22,7 +22,7 @@ Run tag:
 - `fs0_seed20260226.log/jsonl`
 - `fs1a-2_seed20260226.log/jsonl`
 
-## Coarse (`results/mnist_fg_coarse_v8_20260227T140325Z/`)
+## Coarse (`results/mnist_fg_coarse_v9a_20260301T015231Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -31,7 +31,7 @@ Run tag:
 - `fs0_seed20260226_r1.log/jsonl`
 - `fs1a-2_seed20260226_r1.log/jsonl`
 
-## Confirm (`results/mnist_fg_confirm_v8_20260227T140325Z/`)
+## Confirm (`results/mnist_fg_confirm_v9a_20260301T015231Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -44,6 +44,7 @@ Run tag:
 
 ## Reports
 
+- `results/mnist_fg_hard_stop_report_v9a_square_migration_random_source.md`
 - `results/mnist_fg_success_report_v8_square_migration.md`
 - `results/mnist_fg_success_report_v7_random.md`
 - `results/mnist_fg_success_report_v6_left_right.md`
@@ -52,6 +53,7 @@ Run tag:
 
 ## Previous cycles
 
+- Cycle-8: `v8_20260227T140325Z` (square migration from prefix source, confirm pass)
 - Cycle-7: `v7_20260227T123631Z` (random mask ablation, confirm pass)
 - Cycle-6: `v6_20260227T111807Z` (left=right positive-control, confirm pass)
 - Cycle-5: `v5_20260227T025027Z` (prefix natural task, confirm pass)
@@ -63,5 +65,6 @@ Run tag:
 - `payload/data/mnist14b_bin/`
 - `payload/data/mnist14b_colmajor_bin/`
 - `payload/data/mnist14b_left_eq_right_colmajor_bin/`
+- `results/run_manifest_v9a_20260301T015231Z.txt`
 - `artifacts/manifests/run_manifest_data_*.txt`
 - `artifacts/manifests/sha256_data_*.txt`

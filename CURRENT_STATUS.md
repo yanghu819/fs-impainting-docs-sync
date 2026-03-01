@@ -8,27 +8,28 @@
 - coarse 门槛: `+0.8pp` (`0.008`)
 - confirm 门槛: 三 seed 平均 `+1.5pp` (`0.015`) 且单 seed 不为负
 
-## 最新主结论 (Cycle-8 / run_tag=v8_20260227T140325Z)
+## 最新主结论 (Cycle-9A / run_tag=v9a_20260301T015231Z)
 
-在 `mnist14b_colmajor + square migration(prefix->square)` 下，Future-Seed 通过全流程：
+在 `mnist14b_colmajor + square migration(random-source init)` 下：
 
 1. Stage0: **PASS**
-- `best_maskacc_fg=0.941291`
+- `best_maskacc_fg=0.960901`
 
 2. smoke: **PASS**
 - `FS0` / `FS1(alpha=-2)` 指标链路完整
-- `avg_delta_best_fg=+0.004635` (smoke 仅作链路验证)
+- `avg_delta_best_fg=+0.001117` (smoke 仅作链路验证)
 
 3. coarse: **PASS**
-- `FS0 best_fg=0.941291`
-- `FS1(alpha=-2) best_fg=0.960023`
-- `delta_best_fg=+0.018732` (>= 0.008)
+- `FS0 best_fg=0.960901`
+- `FS1(alpha=-2) best_fg=0.970402`
+- `delta_best_fg=+0.009501` (>= 0.008)
 
-4. confirm: **PASS**
+4. confirm: **FAIL**
 - seeds: `20260226, 20260227, 20260228`
-- seed deltas: `[+0.018732, +0.018732, +0.018732]`
-- mean delta: `+0.018732`
+- seed deltas: `[+0.009501, +0.009501, +0.009501]`
+- mean delta: `+0.009501`
 - all seeds non-negative: `true`
+- fail reason: `mean_delta_best_fg < 0.015`
 
 ## 与前几轮成功任务的对比
 
@@ -36,25 +37,35 @@
 - Cycle-6 (`v6`, left=right prefix 正控): mean delta `+0.087307`
 - Cycle-7 (`v7`, random mask): mean delta `+0.029239`
 - Cycle-8 (`v8`, square migration): mean delta `+0.018732`
+- Cycle-9A (`v9a`, square migration + random-source init): mean delta `+0.009501` (confirm fail)
 
-结论：FS 在 square 迁移任务仍可达 confirm 门槛，但增益继续收敛到较小区间；相较 prefix 系列，符合“future-dependent 强度越高，FS 增益越大”的边界趋势。
+结论：仅更换迁移源到 random 后，FS 增益进一步收敛；虽然 coarse 仍过线，但 confirm 门槛未达，主线按协议硬停。
 
 ## 决策型汇报
 
 `当前配置数｜通过数｜最佳配置｜风险｜下一步`
 
-`9｜4(stage0+smoke+coarse+confirm)｜FS1(alpha=-2,square-migration+col-major)｜confirm三个seed增益完全一致，方差信息有限且增益幅度偏小｜补一轮切线：更换迁移源权重或增加迁移步数，验证square下增益上限`
+`9｜3(stage0+smoke+coarse)｜FS1(alpha=-2,square-migration+random-source-init)｜confirm均值仅+0.95pp(<+1.5pp)，主线门槛未达｜执行v9-B：仅增加迁移训练步数(MAX_ITERS 300->600)，其余冻结`
+
+## 硬停输出（Cycle-9A）
+
+- 结论：`confirm fail`，本轮不进入“有效增益”结论。
+- 证据：`results/mnist_fg_confirm_v9a_20260301T015231Z/gate.json`，`mean_delta_best_fg=0.0095006`。
+- 教训：square 任务在高基线区间（FS0≈0.9609）下，FS 增益上限偏小；仅换迁移源不足以抬到 confirm 门槛。
+- 下轮门槛：`v9-B` 只改 `MAX_ITERS=600`，其余冻结；coarse 需 `>=0.008` 且 confirm 均值需 `>=0.015`。
 
 ## 证据路径 (latest)
 
-- `results/mnist_fg_stage0_v8_20260227T140325Z/gate.json`
-- `results/mnist_fg_smoke_v8_20260227T140325Z/gate.json`
-- `results/mnist_fg_coarse_v8_20260227T140325Z/gate.json`
-- `results/mnist_fg_coarse_v8_20260227T140325Z/prune_table.csv`
-- `results/mnist_fg_confirm_v8_20260227T140325Z/gate.json`
-- `results/mnist_fg_confirm_v8_20260227T140325Z/prune_table.csv`
+- `results/mnist_fg_stage0_v9a_20260301T015231Z/gate.json`
+- `results/mnist_fg_smoke_v9a_20260301T015231Z/gate.json`
+- `results/mnist_fg_coarse_v9a_20260301T015231Z/gate.json`
+- `results/mnist_fg_coarse_v9a_20260301T015231Z/prune_table.csv`
+- `results/mnist_fg_confirm_v9a_20260301T015231Z/gate.json`
+- `results/mnist_fg_confirm_v9a_20260301T015231Z/prune_table.csv`
+- `results/run_manifest_v9a_20260301T015231Z.txt`
 
 补充报告:
+- `results/mnist_fg_hard_stop_report_v9a_square_migration_random_source.md`
 - `results/mnist_fg_success_report_v8_square_migration.md`
 - `results/mnist_fg_success_report_v7_random.md`
 - `results/mnist_fg_success_report_v6_left_right.md`
@@ -63,6 +74,7 @@
 
 ## 历史轮次
 
+- Cycle-9A (`v9a_20260301T015231Z`): square migration(random-source init) confirm fail。
 - Cycle-8 (`v8_20260227T140325Z`): square migration confirm pass。
 - Cycle-7 (`v7_20260227T123631Z`): random mask confirm pass。
 - Cycle-6 (`v6_20260227T111807Z`): 正控 left=right confirm pass。
