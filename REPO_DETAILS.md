@@ -69,6 +69,7 @@ Added env support:
 - Cycle-8: `mnist14b_colmajor_bin` + square migration (`prefix->square`, init from prefix checkpoints) -> confirm pass (mean delta `+0.018732`).
 - Cycle-9A: `mnist14b_colmajor_bin` + square migration (`random->square`, init from random checkpoints) -> coarse pass, confirm fail (mean delta `+0.009501`).
 - Cycle-9B: `mnist14b_colmajor_bin` + square migration (`random->square`, iters 300->600 only) -> coarse fail (delta `+0.004385`), confirm skipped.
+- Cycle-10A: `mnist14b_colmajor_bin` + square migration (`prefix->square`, `BIN_SQUARE_SIZE:6->8` only) -> confirm pass (mean delta `+0.051901`).
 
 ## Workspace utility scripts
 

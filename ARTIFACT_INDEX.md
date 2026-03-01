@@ -1,11 +1,11 @@
 # Artifact Index
 
-## Latest cycle (Cycle-9B)
+## Latest cycle (Cycle-10A)
 
 Run tag:
-- `v9b_20260301T031013Z`
+- `v10a_20260301T223202Z`
 
-## Stage0 (`results/mnist_fg_stage0_v9b_20260301T031013Z/`)
+## Stage0 (`results/mnist_fg_stage0_v10a_20260301T223202Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -13,7 +13,7 @@ Run tag:
 - `gate.json`
 - `fs0_seed20260226.log/jsonl`
 
-## Smoke (`results/mnist_fg_smoke_v9b_20260301T031013Z/`)
+## Smoke (`results/mnist_fg_smoke_v10a_20260301T223202Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -22,7 +22,7 @@ Run tag:
 - `fs0_seed20260226.log/jsonl`
 - `fs1a-2_seed20260226.log/jsonl`
 
-## Coarse (`results/mnist_fg_coarse_v9b_20260301T031013Z/`)
+## Coarse (`results/mnist_fg_coarse_v10a_20260301T223202Z/`)
 
 - `summary_rows.csv`
 - `summary_agg.json`
@@ -31,12 +31,20 @@ Run tag:
 - `fs0_seed20260226_r1.log/jsonl`
 - `fs1a-2_seed20260226_r1.log/jsonl`
 
-## Confirm (`results/mnist_fg_confirm_v9b_20260301T031013Z/`)
+## Confirm (`results/mnist_fg_confirm_v10a_20260301T223202Z/`)
 
-- `SKIPPED.txt` (`reason=coarse_gate_failed`)
+- `summary_rows.csv`
+- `summary_agg.json`
+- `prune_table.csv`
+- `gate.json`
+- `fs0_seed20260227.log/jsonl`
+- `fs1a-2_seed20260227.log/jsonl`
+- `fs0_seed20260228.log/jsonl`
+- `fs1a-2_seed20260228.log/jsonl`
 
 ## Reports
 
+- `results/mnist_fg_success_report_v10a_square_size8_prefix_source.md`
 - `results/mnist_fg_hard_stop_report_v9b_square_migration_random_source_iters600.md`
 - `results/mnist_fg_hard_stop_report_v9a_square_migration_random_source.md`
 - `results/mnist_fg_success_report_v8_square_migration.md`
@@ -47,6 +55,7 @@ Run tag:
 
 ## Previous cycles
 
+- Cycle-9B: `v9b_20260301T031013Z` (random-source square migration, coarse fail)
 - Cycle-9A: `v9a_20260301T015231Z` (random-source square migration, confirm fail)
 - Cycle-8: `v8_20260227T140325Z` (square migration from prefix source, confirm pass)
 - Cycle-7: `v7_20260227T123631Z` (random mask ablation, confirm pass)
@@ -62,5 +71,6 @@ Run tag:
 - `payload/data/mnist14b_left_eq_right_colmajor_bin/`
 - `results/run_manifest_v9a_20260301T015231Z.txt`
 - `results/run_manifest_v9b_20260301T031013Z.txt`
+- `results/run_manifest_v10a_20260301T223202Z.txt`
 - `artifacts/manifests/run_manifest_data_*.txt`
 - `artifacts/manifests/sha256_data_*.txt`

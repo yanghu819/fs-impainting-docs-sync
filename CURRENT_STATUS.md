@@ -8,24 +8,27 @@
 - coarse 门槛: `+0.8pp` (`0.008`)
 - confirm 门槛: 三 seed 平均 `+1.5pp` (`0.015`) 且单 seed 不为负
 
-## 最新主结论 (Cycle-9B / run_tag=v9b_20260301T031013Z)
+## 最新主结论 (Cycle-10A / run_tag=v10a_20260301T223202Z)
 
-在 `mnist14b_colmajor + square migration(random-source init, iters600)` 下：
+在 `mnist14b_colmajor + square migration(prefix-source init, square_size=8)` 下：
 
 1. Stage0: **PASS**
-- `best_maskacc_fg=0.960901`
+- `best_maskacc_fg=0.867560`
 
 2. smoke: **PASS**
 - `FS0` / `FS1(alpha=-2)` 指标链路完整
-- `avg_delta_best_fg=+0.001117` (smoke 仅作链路验证)
+- `avg_delta_best_fg=+0.071776` (smoke 明显分化)
 
-3. coarse: **FAIL**
-- `FS0 best_fg=0.967030`
-- `FS1(alpha=-2) best_fg=0.971415`
-- `delta_best_fg=+0.004385` (< 0.008)
+3. coarse: **PASS**
+- `FS0 best_fg=0.867560`
+- `FS1(alpha=-2) best_fg=0.919461`
+- `delta_best_fg=+0.051901` (>= 0.008)
 
-4. confirm: **SKIPPED**
-- reason: `coarse_gate_failed`
+4. confirm: **PASS**
+- seeds: `20260226, 20260227, 20260228`
+- seed deltas: `[+0.051901, +0.051901, +0.051901]`
+- mean delta: `+0.051901`
+- all seeds non-negative: `true`
 
 ## 与前几轮成功任务的对比
 
@@ -35,16 +38,17 @@
 - Cycle-8 (`v8`, square migration): mean delta `+0.018732`
 - Cycle-9A (`v9a`, square migration + random-source init): mean delta `+0.009501` (confirm fail)
 - Cycle-9B (`v9b`, square migration + random-source init + iters600): coarse delta `+0.004385` (coarse fail)
+- Cycle-10A (`v10a`, square_size=8 + prefix-source init): mean delta `+0.051901` (confirm pass)
 
-结论：在 random-source 设定下，仅增加训练步数到 600 未改善门槛达成，反而 coarse 即被剪枝；square 主线按协议硬停。
+结论：在 square 分支中，单变量把 `square_size` 从 6 提到 8 后，FS 增益显著回升并稳定通过 confirm，ROI 明显高于继续在 random-source + iters 方向加算力。
 
 ## 决策型汇报
 
 `当前配置数｜通过数｜最佳配置｜风险｜下一步`
 
-`9｜2(stage0+smoke)｜FS1(alpha=-2,square-migration+random-source-init,iters600)｜coarse增益仅+0.44pp(<+0.8pp)，确认阶段被剪枝｜主线硬停；回退到v8结论并转Plan C`
+`9｜4(stage0+smoke+coarse+confirm)｜FS1(alpha=-2,square-size8+prefix-source-init)｜seed间delta完全一致，方差信息有限｜进入v10B最小方差验证（仅改seed组），确认稳健性`
 
-## 硬停输出（Cycle-9B）
+## 最新硬停记录（历史，Cycle-9B）
 
 - 结论：`coarse fail`，按协议直接剪枝并跳过 confirm。
 - 证据：`results/mnist_fg_coarse_v9b_20260301T031013Z/gate.json`，`avg_delta_best_fg=0.0043849`。
@@ -53,14 +57,16 @@
 
 ## 证据路径 (latest)
 
-- `results/mnist_fg_stage0_v9b_20260301T031013Z/gate.json`
-- `results/mnist_fg_smoke_v9b_20260301T031013Z/gate.json`
-- `results/mnist_fg_coarse_v9b_20260301T031013Z/gate.json`
-- `results/mnist_fg_coarse_v9b_20260301T031013Z/prune_table.csv`
-- `results/mnist_fg_confirm_v9b_20260301T031013Z/SKIPPED.txt`
-- `results/run_manifest_v9b_20260301T031013Z.txt`
+- `results/mnist_fg_stage0_v10a_20260301T223202Z/gate.json`
+- `results/mnist_fg_smoke_v10a_20260301T223202Z/gate.json`
+- `results/mnist_fg_coarse_v10a_20260301T223202Z/gate.json`
+- `results/mnist_fg_coarse_v10a_20260301T223202Z/prune_table.csv`
+- `results/mnist_fg_confirm_v10a_20260301T223202Z/gate.json`
+- `results/mnist_fg_confirm_v10a_20260301T223202Z/prune_table.csv`
+- `results/run_manifest_v10a_20260301T223202Z.txt`
 
 补充报告:
+- `results/mnist_fg_success_report_v10a_square_size8_prefix_source.md`
 - `results/mnist_fg_hard_stop_report_v9b_square_migration_random_source_iters600.md`
 - `results/mnist_fg_hard_stop_report_v9a_square_migration_random_source.md`
 - `results/mnist_fg_success_report_v8_square_migration.md`
@@ -71,6 +77,7 @@
 
 ## 历史轮次
 
+- Cycle-10A (`v10a_20260301T223202Z`): square_size=8 + prefix-source init confirm pass。
 - Cycle-9B (`v9b_20260301T031013Z`): square migration(random-source,iters600) coarse fail。
 - Cycle-9A (`v9a_20260301T015231Z`): square migration(random-source init) confirm fail。
 - Cycle-8 (`v8_20260227T140325Z`): square migration confirm pass。

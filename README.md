@@ -9,15 +9,16 @@ This repo is the experiment dossier / decision sync for validating Future-Seed o
 - `ARTIFACT_INDEX.md`: artifact index by cycle/stage.
 - `REPO_TREE.txt`: tracked file tree snapshot.
 
-## Latest snapshot (v9b_20260301T031013Z)
+## Latest snapshot (v10a_20260301T223202Z)
 
-- task setting: `mnist14b_colmajor + square migration (random-source init)`
-- Stage0: pass (`best_maskacc_fg=0.9609`)
+- task setting: `mnist14b_colmajor + square migration (prefix-source init, square_size=8)`
+- Stage0: pass (`best_maskacc_fg=0.8676`)
 - smoke: pass
-- coarse: fail (`delta_best_fg=+0.00438` < `0.008`, `alpha=-2`)
-- confirm: skipped (coarse gate failed)
+- coarse: pass (`delta_best_fg=+0.05190`, `alpha=-2`)
+- confirm: pass (3-seed mean `+0.05190`, all seeds non-negative)
 
 Reference cycles:
+- `v9b_20260301T031013Z` square migration (random-source init, iters600) coarse fail (`+0.00438`).
 - `v9a_20260301T015231Z` square migration (random-source init) coarse pass but confirm fail, mean `+0.00950`.
 - `v8_20260227T140325Z` square migration (prefix-source init) confirm pass, mean `+0.01873`.
 - `v7_20260227T123631Z` random-mask ablation confirm pass, mean `+0.02924`.
