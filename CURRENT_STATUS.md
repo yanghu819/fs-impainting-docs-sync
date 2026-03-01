@@ -8,9 +8,9 @@
 - coarse 门槛: `+0.8pp` (`0.008`)
 - confirm 门槛: 三 seed 平均 `+1.5pp` (`0.015`) 且单 seed 不为负
 
-## 最新主结论 (Cycle-9A / run_tag=v9a_20260301T015231Z)
+## 最新主结论 (Cycle-9B / run_tag=v9b_20260301T031013Z)
 
-在 `mnist14b_colmajor + square migration(random-source init)` 下：
+在 `mnist14b_colmajor + square migration(random-source init, iters600)` 下：
 
 1. Stage0: **PASS**
 - `best_maskacc_fg=0.960901`
@@ -19,17 +19,13 @@
 - `FS0` / `FS1(alpha=-2)` 指标链路完整
 - `avg_delta_best_fg=+0.001117` (smoke 仅作链路验证)
 
-3. coarse: **PASS**
-- `FS0 best_fg=0.960901`
-- `FS1(alpha=-2) best_fg=0.970402`
-- `delta_best_fg=+0.009501` (>= 0.008)
+3. coarse: **FAIL**
+- `FS0 best_fg=0.967030`
+- `FS1(alpha=-2) best_fg=0.971415`
+- `delta_best_fg=+0.004385` (< 0.008)
 
-4. confirm: **FAIL**
-- seeds: `20260226, 20260227, 20260228`
-- seed deltas: `[+0.009501, +0.009501, +0.009501]`
-- mean delta: `+0.009501`
-- all seeds non-negative: `true`
-- fail reason: `mean_delta_best_fg < 0.015`
+4. confirm: **SKIPPED**
+- reason: `coarse_gate_failed`
 
 ## 与前几轮成功任务的对比
 
@@ -38,33 +34,34 @@
 - Cycle-7 (`v7`, random mask): mean delta `+0.029239`
 - Cycle-8 (`v8`, square migration): mean delta `+0.018732`
 - Cycle-9A (`v9a`, square migration + random-source init): mean delta `+0.009501` (confirm fail)
+- Cycle-9B (`v9b`, square migration + random-source init + iters600): coarse delta `+0.004385` (coarse fail)
 
-结论：仅更换迁移源到 random 后，FS 增益进一步收敛；虽然 coarse 仍过线，但 confirm 门槛未达，主线按协议硬停。
+结论：在 random-source 设定下，仅增加训练步数到 600 未改善门槛达成，反而 coarse 即被剪枝；square 主线按协议硬停。
 
 ## 决策型汇报
 
 `当前配置数｜通过数｜最佳配置｜风险｜下一步`
 
-`9｜3(stage0+smoke+coarse)｜FS1(alpha=-2,square-migration+random-source-init)｜confirm均值仅+0.95pp(<+1.5pp)，主线门槛未达｜执行v9-B：仅增加迁移训练步数(MAX_ITERS 300->600)，其余冻结`
+`9｜2(stage0+smoke)｜FS1(alpha=-2,square-migration+random-source-init,iters600)｜coarse增益仅+0.44pp(<+0.8pp)，确认阶段被剪枝｜主线硬停；回退到v8结论并转Plan C`
 
-## 硬停输出（Cycle-9A）
+## 硬停输出（Cycle-9B）
 
-- 结论：`confirm fail`，本轮不进入“有效增益”结论。
-- 证据：`results/mnist_fg_confirm_v9a_20260301T015231Z/gate.json`，`mean_delta_best_fg=0.0095006`。
-- 教训：square 任务在高基线区间（FS0≈0.9609）下，FS 增益上限偏小；仅换迁移源不足以抬到 confirm 门槛。
-- 下轮门槛：`v9-B` 只改 `MAX_ITERS=600`，其余冻结；coarse 需 `>=0.008` 且 confirm 均值需 `>=0.015`。
+- 结论：`coarse fail`，按协议直接剪枝并跳过 confirm。
+- 证据：`results/mnist_fg_coarse_v9b_20260301T031013Z/gate.json`，`avg_delta_best_fg=0.0043849`。
+- 教训：在 square + random-source 线中，增加训练步数不会带来有效增益，FS 优势已接近可观测下限。
+- 下轮门槛：若继续 square 分支，需先引入新信息源（非仅增加步数）再重开 coarse；否则转回已过 confirm 的 `v8` 作为稳定结论。
 
 ## 证据路径 (latest)
 
-- `results/mnist_fg_stage0_v9a_20260301T015231Z/gate.json`
-- `results/mnist_fg_smoke_v9a_20260301T015231Z/gate.json`
-- `results/mnist_fg_coarse_v9a_20260301T015231Z/gate.json`
-- `results/mnist_fg_coarse_v9a_20260301T015231Z/prune_table.csv`
-- `results/mnist_fg_confirm_v9a_20260301T015231Z/gate.json`
-- `results/mnist_fg_confirm_v9a_20260301T015231Z/prune_table.csv`
-- `results/run_manifest_v9a_20260301T015231Z.txt`
+- `results/mnist_fg_stage0_v9b_20260301T031013Z/gate.json`
+- `results/mnist_fg_smoke_v9b_20260301T031013Z/gate.json`
+- `results/mnist_fg_coarse_v9b_20260301T031013Z/gate.json`
+- `results/mnist_fg_coarse_v9b_20260301T031013Z/prune_table.csv`
+- `results/mnist_fg_confirm_v9b_20260301T031013Z/SKIPPED.txt`
+- `results/run_manifest_v9b_20260301T031013Z.txt`
 
 补充报告:
+- `results/mnist_fg_hard_stop_report_v9b_square_migration_random_source_iters600.md`
 - `results/mnist_fg_hard_stop_report_v9a_square_migration_random_source.md`
 - `results/mnist_fg_success_report_v8_square_migration.md`
 - `results/mnist_fg_success_report_v7_random.md`
@@ -74,6 +71,7 @@
 
 ## 历史轮次
 
+- Cycle-9B (`v9b_20260301T031013Z`): square migration(random-source,iters600) coarse fail。
 - Cycle-9A (`v9a_20260301T015231Z`): square migration(random-source init) confirm fail。
 - Cycle-8 (`v8_20260227T140325Z`): square migration confirm pass。
 - Cycle-7 (`v7_20260227T123631Z`): random mask confirm pass。
